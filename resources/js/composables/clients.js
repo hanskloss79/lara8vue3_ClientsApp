@@ -19,15 +19,16 @@ export default function useClients() {
     };
 
     const showClient = async (id) => {
-        let response = await axios.get('/api/clients/${id}');
-        clients.value = response.data.data;
+        let response = await axios.get('/api/clients/'+id);
+        console.log (response);
+        client.value = response.data.data;
     }
 
     const storeClient = async (data) => {
         errors.value = '';
         try {
             await axios.post('/api/clients', data);
-            await router.push({ name: 'clients.index' });
+            await router.push({ name: 'client.index' });
         } catch (e) {
             if (e.response.status === 422) {
                 for (const key in e.response.data.errors) {
@@ -40,8 +41,8 @@ export default function useClients() {
     const updateClient = async (id) => {
         errors.value = '';
         try {
-            await axios.patch('/api/clients/${id}', client.value);
-            await router.push({ name: 'clients.index' });
+            await axios.patch('/api/clients/' + id, client.value);
+            await router.push({ name: 'client.index' });
         } catch (e) {
             if (e.response.status === 422){
                 for (const key in e.response.data.errors) {
@@ -51,6 +52,10 @@ export default function useClients() {
         }
     };
 
+    const destroyClient = async (id) => {
+        await axios.delete('/api/clients/' + id);
+    };
+
     return {
         errors,
         client,
@@ -58,7 +63,8 @@ export default function useClients() {
         getClients,
         storeClient,
         showClient,
-        updateClient
+        updateClient,
+        destroyClient,
     }
 
 }
